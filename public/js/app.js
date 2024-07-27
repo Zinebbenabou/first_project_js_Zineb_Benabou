@@ -1,3 +1,8 @@
+
+let userData = [];
+let currentUser = null;
+
+
 class User {
     constructor(fullName, email, age, password, balance , loanAmount) {
         this.fullName = fullName;
@@ -246,4 +251,7 @@ class Bank {
         }
     }
 }
+l
+const bank = new Bank();
+bank.main();
 
