@@ -1,18 +1,15 @@
-let userData = []; 
-let currentUser = null; 
-
 class User {
-    constructor(fullName, email, age, password, balance) {
+    constructor(fullName, email, age, password, balance , loanAmount) {
         this.fullName = fullName;
         this.email = email;
         this.age = age;
         this.password = password;
         this.balance = balance;
+        this.loanAmount = loanAmount; // Track the loan amount
+        this.loanBalance = loanAmount;
     }
 
-    
     createAccountUser() {
-       
         let checkNameLength = this.fullName.split('').filter(char => char !== ' ').length;
         if (checkNameLength < 5) {
             console.log("The name is not valid. It should be at least 5 characters long.");
@@ -23,18 +20,18 @@ class User {
             console.log(`${this.fullName} contains invalid characters.`);
             return;
         }
-       
+
         if (this.email.includes(' ')) {
             console.log("The email address is not valid. It should not contain spaces.");
             return;
         }
-      
+
         let checkEmailLength = this.email.split('').filter(char => char !== ' ').length;
         if (checkEmailLength < 10) {
             console.log("The email is not valid. It should be at least 10 characters long.");
             return;
         }
-        
+
         let countChar = this.email.split("@").length - 1;
         if (countChar !== 1) {
             console.log("The email address is not valid. It must contain exactly one @ character.");
@@ -50,7 +47,8 @@ class User {
             userName: this.fullName,
             email: emailLower,
             password: this.password,
-            balance: this.balance
+            balance: this.balance,
+            loanAmount: this.loanAmount
         };
         userData.push(user);
         console.log(`${this.email} is added successfully.`);
@@ -93,7 +91,6 @@ class User {
         }
     }
 
-    
     logout() {
         if (currentUser) {
             currentUser = null;
@@ -103,11 +100,9 @@ class User {
         }
     }
 
-    
     withdraw() {
         if (currentUser) {
             let amount = parseFloat(prompt("Enter the amount to withdraw: "));
-            
             if (amount > currentUser.balance) {
                 console.log("Insufficient funds. Your balance is $" + currentUser.balance);
                 return;
@@ -118,6 +113,40 @@ class User {
             console.log("You must be logged in to withdraw money.");
         }
     }
+
+    deposit() {
+        if (currentUser) {
+            let amount = parseFloat(prompt("Enter the amount to deposit (max 1000): "));
+            if (amount > 1000) {
+                console.log("Cannot deposit more than 1000 dirhams.");
+            } else {
+                currentUser.balance += amount;
+                console.log(`Deposit successful. New balance: $${currentUser.balance}`);
+            }
+        } else {
+            console.log("You must be logged in to deposit money.");
+        }
+    }
+
+    takeLoan() {
+        if (currentUser) {
+            let loanAmount = currentUser.balance * 0.2;
+            currentUser.balance += loanAmount;
+            currentUser.loanAmount = loanAmount;
+            currentUser.loanBalance += loanAmount;
+            console.log(`Loan taken successfully. Loan amount: $${loanAmount}. New balance: $${currentUser.balance}`);
+        } else {
+            console.log("You must be logged in to take a loan.");
+        }
+    }
+
+    decreaseLoan() {
+        if (currentUser) {
+            let loanReduction = currentUser.loanBalance * 0.1;
+            currentUser.loanBalance -= loanReduction;
+            console.log(`Loan decreased by $${loanReduction}. Remaining loan balance: $${currentUser.loanBalance}`);
+        }
+    }
 }
 
 class Bank {
@@ -125,19 +154,19 @@ class Bank {
         this.user = user
     }
 
-    
     displayMenu() {
         console.log("1. Register");
         console.log("2. Login");
         console.log("3. Change Password");
         console.log("4. Withdraw Money");
-        console.log("5. Logout");
-        console.log("6. Exit");
+        console.log("5. Deposit Money");
+        console.log("6. Take Loan");
+        console.log("7. Logout");
+        console.log("8. Exit");
         let choice = prompt("Choose an option: ");
         return choice;
     }
 
-    
     register() {
         let fullName = prompt("Enter your full name: ");
         let email = prompt("Enter your email: ");
@@ -147,7 +176,6 @@ class Bank {
         user.createAccountUser();
     }
 
-    
     login() {
         let email = prompt("Enter your email: ");
         let password = prompt("Enter your password: ");
@@ -158,28 +186,34 @@ class Bank {
         }
     }
 
-    
     changePassword() {
         let user = new User('', '', '', ''); 
         user.changePassword();
     }
 
-    
     withdraw() {
         let user = new User('', '', '', ''); 
         user.withdraw();
     }
 
-   
+    deposit() {
+        let user = new User('', '', '', ''); 
+        user.deposit();
+    }
+
+    takeLoan() {
+        let user = new User('', '', '', ''); 
+        user.takeLoan();
+    }
+
     logout() {
         let user = new User('', '', '', ''); 
         user.logout();
     }
 
-    
     main() {
         let choice;
-       
+        while (true) {
             choice = this.displayMenu();
             switch (choice) {
                 case '1':
@@ -195,18 +229,21 @@ class Bank {
                     this.withdraw();
                     break;
                 case '5':
-                    this.logout();
+                    this.deposit();
                     break;
                 case '6':
-                    console.log("Good By");
+                    this.takeLoan();
                     break;
+                case '7':
+                    this.logout();
+                    break;
+                case '8':
+                    console.log("Good Bye");
+                    return;
                 default:
                     console.log("Invalid choice. Please try again.");
             }
-       
+        }
     }
 }
 
-
-const bank = new Bank();
-bank.main();
