@@ -5,7 +5,7 @@ class User {
         this.age = age;
         this.password = password;
         this.balance = balance;
-        this.loanAmount = loanAmount; // Track the loan amount
+        this.loanAmount = loanAmount; 
         this.loanBalance = loanAmount;
     }
 
