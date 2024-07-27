@@ -1,5 +1,5 @@
-let userData = []; // Array to store user data
-let currentUser = null; // Variable to keep track of the currently logged-in user
+let userData = []; 
+let currentUser = null; 
 
 class User {
     constructor(fullName, email, age, password, balance) {
@@ -10,9 +10,9 @@ class User {
         this.balance = balance;
     }
 
-    // Method to create a new account
+    
     createAccountUser() {
-        // Check name conditions
+       
         let checkNameLength = this.fullName.split('').filter(char => char !== ' ').length;
         if (checkNameLength < 5) {
             console.log("The name is not valid. It should be at least 5 characters long.");
@@ -23,18 +23,18 @@ class User {
             console.log(`${this.fullName} contains invalid characters.`);
             return;
         }
-        // Check if the email contains spaces
+       
         if (this.email.includes(' ')) {
             console.log("The email address is not valid. It should not contain spaces.");
             return;
         }
-        // Check email length
+      
         let checkEmailLength = this.email.split('').filter(char => char !== ' ').length;
         if (checkEmailLength < 10) {
             console.log("The email is not valid. It should be at least 10 characters long.");
             return;
         }
-        // Check email contains exactly one @
+        
         let countChar = this.email.split("@").length - 1;
         if (countChar !== 1) {
             console.log("The email address is not valid. It must contain exactly one @ character.");
